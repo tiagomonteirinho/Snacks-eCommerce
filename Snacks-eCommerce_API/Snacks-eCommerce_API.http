@@ -1,0 +1,6 @@
+@Snacks_eCommerce_API_HostAddress = http://localhost:5158
+
+GET {{Snacks_eCommerce_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
