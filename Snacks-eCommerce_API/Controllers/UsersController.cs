@@ -26,8 +26,8 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register([FromBody] User user)
     {
-        var checkUser = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
-        if (checkUser != null)
+        var existingUser = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+        if (existingUser is not null)
         {
             return BadRequest("That email is already being used.");
         }
@@ -49,16 +49,19 @@ public class UsersController : ControllerBase
         var key = _config["JWT:Key"] ?? throw new ArgumentNullException("JWT:Key", "JWT:Key cannot be null.");
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
         var claims = new[]
         {
             new Claim(ClaimTypes.Email, user.Email!)
         };
+
         var token = new JwtSecurityToken(
             issuer: _config["JWT:Issuer"],
             audience: _config["JWT:Audience"],
             claims: claims,
             expires: DateTime.Now.AddDays(10),
             signingCredentials: credentials);
+
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         return new ObjectResult(new

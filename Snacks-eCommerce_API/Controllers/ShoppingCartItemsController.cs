@@ -23,6 +23,7 @@ public class ShoppingCartItemsController : ControllerBase
         {
             return NotFound("User could not be found.");
         }
+
         var shoppingCartItems = await (from s in _appDbContext.ShoppingCartItems.Where(s => s.UserId == userId)
                                        join p in _appDbContext.Products on s.ProductId equals p.Id
                                        select new
@@ -94,11 +95,11 @@ public class ShoppingCartItemsController : ControllerBase
 
         if (shoppingCartItem != null)
         {
-            if (action.ToLower() == "Increase")
+            if (action.ToLower() == "increase")
             {
                 shoppingCartItem.Quantity += 1;
             }
-            else if (action.ToLower() == "Decrease")
+            else if (action.ToLower() == "decrease")
             {
                 if (shoppingCartItem.Quantity > 1)
                 {
@@ -111,7 +112,7 @@ public class ShoppingCartItemsController : ControllerBase
                     return Ok();
                 }
             }
-            else if (action.ToLower() == "Remove")
+            else if (action.ToLower() == "remove")
             {
                 _appDbContext.ShoppingCartItems.Remove(shoppingCartItem);
                 await _appDbContext.SaveChangesAsync();
@@ -119,7 +120,7 @@ public class ShoppingCartItemsController : ControllerBase
             }
             else
             {
-                return BadRequest("Request could not be processed.");
+                return BadRequest("Request could not be processed. Available action field values: 'increase'; 'decrease'; 'remove'.");
             }
 
             shoppingCartItem.Total = shoppingCartItem.UnitPrice * shoppingCartItem.Quantity;

@@ -31,7 +31,7 @@ public class ProductsController : ControllerBase
         }
         else
         {
-            return BadRequest("Invalid product type.");
+            return BadRequest("Request could not be processed. Available productType field values: 'category' (with categoryId field value); 'popular'; 'bestseller'.");
         }
 
         var filteredProducts = products.Select(p => new
