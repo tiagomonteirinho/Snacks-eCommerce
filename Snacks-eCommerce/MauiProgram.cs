@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Snacks_eCommerce.Services;
 
 namespace Snacks_eCommerce
 {
@@ -20,6 +21,7 @@ namespace Snacks_eCommerce
 #endif
 
             builder.Services.AddHttpClient();
+            builder.Services.AddSingleton<ApiService>();
 
             return builder.Build();
         }
