@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Snacks_eCommerce.Services;
+using Snacks_eCommerce.Validations;
 
 namespace Snacks_eCommerce
 {
@@ -22,6 +23,7 @@ namespace Snacks_eCommerce
 
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<ApiService>();
+            builder.Services.AddSingleton<IValidator, Validator>();
 
             return builder.Build();
         }

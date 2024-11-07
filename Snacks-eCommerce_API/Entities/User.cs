@@ -7,7 +7,6 @@ namespace Snacks_eCommerce.Entities
     {
         public int Id { get; set; }
 
-        [Required]
         [StringLength(99)]
         public string? Name { get; set; }
 
