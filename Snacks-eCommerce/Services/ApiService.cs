@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Snacks_eCommerce.Models;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -109,6 +110,74 @@ namespace Snacks_eCommerce.Services
             {
                 _logger.LogError($"Could not process HTTP request to {uri}: {ex.Message}");
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task<(List<Category>? categories, string? errorMessage)> GetCategoriesAsync()
+        {
+            return await GetAsync<List<Category>>("api/categories");
+        }
+
+        public async Task<(List<Product>? products, string? errorMessage)> GetProductsAsync(string productType, string categoryId)
+        {
+            string endpoint = $"api/products?productType={productType}&categoryId={categoryId}";
+            return await GetAsync<List<Product>>(endpoint);
+        }
+
+        private async Task<(T? data, string? errorMessage)> GetAsync<T>(string endpoint)
+        {
+            try
+            {
+                AddAuthorizationHeader();
+                var response = await _httpClient.GetAsync(AppConfig.BaseUrl + endpoint);
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    var data = JsonSerializer.Deserialize<T>(responseString, _serializerOptions);
+
+                    // If data returns null, create generic type instance.
+                    return (data ?? Activator.CreateInstance<T>(), null);
+                }
+                else
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        string errorMessage = "Unauthorized";
+                        _logger.LogWarning(errorMessage);
+                        return (default, errorMessage);
+                    }
+
+                    string generalErrorMessage = $"Could not process HTTP request 1: {endpoint} {response.ReasonPhrase}";
+                    _logger.LogError(generalErrorMessage);
+                    return (default, generalErrorMessage);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                string errorMessage = $"Could not process HTTP request 2: {ex.Message}";
+                _logger.LogError(ex, errorMessage);
+                return (default, errorMessage);
+            }
+            catch (JsonException ex)
+            {
+                string errorMessage = $"Could not deserialize JSON: {ex.Message}";
+                _logger.LogError(ex, errorMessage);
+                return (default, errorMessage);
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = $"Could not process request 3: {ex.Message}";
+                _logger.LogError(ex, errorMessage);
+                return (default, errorMessage);
+            }
+        }
+
+        private void AddAuthorizationHeader()
+        {
+            var token = Preferences.Get("accesstoken", string.Empty);
+            if (!string.IsNullOrEmpty(token))
+            {
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
         }
     }

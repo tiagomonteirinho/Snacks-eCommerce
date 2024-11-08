@@ -32,7 +32,7 @@ public partial class LoginPage : ContentPage
         var response = await _apiService.Login(email_entry1.Text, password_entry1.Text);
         if (!response.HasError)
         {
-            Application.Current!.MainPage = new AppShell();
+            Application.Current!.MainPage = new AppShell(_apiService, _validator);
         }
         else
         {
