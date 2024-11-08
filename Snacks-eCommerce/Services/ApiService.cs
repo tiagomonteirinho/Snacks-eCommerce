@@ -153,14 +153,14 @@ namespace Snacks_eCommerce.Services
                         return (default, errorMessage);
                     }
 
-                    string generalErrorMessage = $"Could not process HTTP request 1: {endpoint} {response.ReasonPhrase}";
+                    string generalErrorMessage = $"Could not process HTTP request: {response.ReasonPhrase}";
                     _logger.LogError(generalErrorMessage);
                     return (default, generalErrorMessage);
                 }
             }
             catch (HttpRequestException ex)
             {
-                string errorMessage = $"Could not process HTTP request 2: {ex.Message}";
+                string errorMessage = $"Could not process HTTP request: {ex.Message}";
                 _logger.LogError(ex, errorMessage);
                 return (default, errorMessage);
             }
@@ -172,7 +172,7 @@ namespace Snacks_eCommerce.Services
             }
             catch (Exception ex)
             {
-                string errorMessage = $"Could not process request 3: {ex.Message}";
+                string errorMessage = $"Could not process request: {ex.Message}";
                 _logger.LogError(ex, errorMessage);
                 return (default, errorMessage);
             }
@@ -184,6 +184,31 @@ namespace Snacks_eCommerce.Services
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+        }
+
+        public async Task<ApiResponse<bool>> AddItemToCart(ShoppingCart shoppingCart)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(shoppingCart, _serializerOptions);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await PostRequest("api/ShoppingCartItems", content);
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"Could not process request: {response.StatusCode}");
+                    return new ApiResponse<bool>
+                    {
+                        ErrorMessage = $"Could not process request: {response.StatusCode}"
+                    };
+                }
+
+                return new ApiResponse<bool> { Data = true };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Could not add item to cart: {ex.Message}");
+                return new ApiResponse<bool> { ErrorMessage = ex.Message };
             }
         }
     }

@@ -128,16 +128,21 @@ public partial class HomePage : ContentPage
 
     private void bestSellerProducts_collection_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var currentSelection = e.CurrentSelection.FirstOrDefault() as Product;
-        if (currentSelection is null) return;
-
-        Navigation.PushAsync(new ProductDetailsPage(currentSelection.Id, currentSelection.Name!,
-            _apiService, _validator));
-
-        ((CollectionView)sender).SelectedItem = null;
+        if (sender is CollectionView collectionView)
+        {
+            DisplayProductDetailsPage(collectionView, e);
+        }
     }
 
     private void popularProducts_collection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (sender is CollectionView collectionView)
+        {
+            DisplayProductDetailsPage(collectionView, e);
+        }
+    }
+
+    private void DisplayProductDetailsPage(CollectionView collectionView, SelectionChangedEventArgs e)
     {
         var currentSelection = e.CurrentSelection.FirstOrDefault() as Product;
         if (currentSelection is null) return;
@@ -145,6 +150,6 @@ public partial class HomePage : ContentPage
         Navigation.PushAsync(new ProductDetailsPage(currentSelection.Id, currentSelection.Name!,
             _apiService, _validator));
 
-        ((CollectionView)sender).SelectedItem = null;
+        collectionView.SelectedItem = null;
     }
 }

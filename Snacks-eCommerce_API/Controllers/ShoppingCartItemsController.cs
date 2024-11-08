@@ -15,8 +15,31 @@ public class ShoppingCartItemsController : ControllerBase
         _appDbContext = appDbContext;
     }
 
+    //[HttpGet("{userId}")]
+    //public async Task<IActionResult> Get(int userId)
+    //{
+    //    var user = await _appDbContext.Users.FindAsync(userId);
+    //    if (user is null)
+    //    {
+    //        return NotFound("User could not be found.");
+    //    }
+
+    //    var shoppingCartItems = await (from s in _appDbContext.ShoppingCartItems.Where(s => s.UserId == userId)
+    //                                   join p in _appDbContext.Products on s.ProductId equals p.Id
+    //                                   select new
+    //                                   {
+    //                                       Id = s.Id,
+    //                                       Price = s.Price,
+    //                                       Total = s.Total,
+    //                                       Quantity = s.Quantity,
+    //                                       ProductId = p.Id,
+    //                                       ProductName = p.Name,
+    //                                       ImageUrl = p.ImageUrl
+    //                                   }).ToListAsync();
+    //    return Ok(shoppingCartItems);
+    //}
     [HttpGet("{userId}")]
-    public async Task<IActionResult> Get(int userId)
+    public async Task<IActionResult> GetShoppingCartItems(int userId)
     {
         var user = await _appDbContext.Users.FindAsync(userId);
         if (user is null)
@@ -24,18 +47,26 @@ public class ShoppingCartItemsController : ControllerBase
             return NotFound("User could not be found.");
         }
 
-        var shoppingCartItems = await (from s in _appDbContext.ShoppingCartItems.Where(s => s.UserId == userId)
-                                       join p in _appDbContext.Products on s.ProductId equals p.Id
-                                       select new
-                                       {
-                                           Id = s.Id,
-                                           Price = s.UnitPrice,
-                                           Total = s.Total,
-                                           Quantity = s.Quantity,
-                                           ProductId = p.Id,
-                                           ProductName = p.Name,
-                                           ImageUrl = p.ImageUrl
-                                       }).ToListAsync();
+        var shoppingCartItems = await _appDbContext.ShoppingCartItems
+            .Where(s => s.UserId == userId)
+            .Include(s => s.Product)
+            .Select(s => new
+            {
+                Id = s.Id,
+                Quantity = s.Quantity,
+                Price = s.UnitPrice,
+                Total = s.Total,
+                ProductId = s.Product!.Id,
+                ProductName = s.Product.Name,
+                ImageUrl = s.Product.ImageUrl
+            })
+            .ToListAsync();
+
+        if (shoppingCartItems == null || shoppingCartItems.Count == 0)
+        {
+            return NotFound("Shopping cart items could not be found.");
+        }
+
         return Ok(shoppingCartItems);
     }
 
