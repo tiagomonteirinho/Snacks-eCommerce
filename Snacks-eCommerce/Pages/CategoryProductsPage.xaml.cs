@@ -11,11 +11,11 @@ public partial class CategoryProductsPage : ContentPage
     private int _categoryId;
     private bool _loginPageDisplayed = false;
 
-    public CategoryProductsPage(int categoryId, string categoryName, ApiService apiService, IValidator validador)
+    public CategoryProductsPage(int categoryId, string categoryName, ApiService apiService, IValidator validator)
     {
         InitializeComponent();
         _apiService = apiService;
-        _validator = validador;
+        _validator = validator;
         _categoryId = categoryId;
         Title = categoryName ?? "Products";
     }
@@ -23,14 +23,14 @@ public partial class CategoryProductsPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await GetCategoryProductsAsync(_categoryId);
+        await GetCategoryProducts(_categoryId);
     }
 
-    private async Task<IEnumerable<Product>> GetCategoryProductsAsync(int categoryId)
+    private async Task<IEnumerable<Product>> GetCategoryProducts(int categoryId)
     {
         try
         {
-            var (products, errorMessage) = await _apiService.GetProductsAsync("category", categoryId.ToString());
+            var (products, errorMessage) = await _apiService.GetProducts("category", categoryId.ToString());
 
             if (errorMessage == "Unauthorized" && !_loginPageDisplayed)
             {
@@ -58,5 +58,16 @@ public partial class CategoryProductsPage : ContentPage
     {
         _loginPageDisplayed = true;
         await Navigation.PushAsync(new LoginPage(_apiService, _validator));
+    }
+
+    private void products_collection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var currentSelection = e.CurrentSelection.FirstOrDefault() as Product;
+        if (currentSelection is null) return;
+
+        Navigation.PushAsync(new ProductDetailsPage(currentSelection.Id, currentSelection.Name!,
+            _apiService, _validator));
+
+        ((CollectionView)sender).SelectedItem = null;
     }
 }

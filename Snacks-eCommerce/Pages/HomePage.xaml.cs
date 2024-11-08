@@ -22,16 +22,16 @@ public partial class HomePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await GetCategoriesAsync();
-        await GetBestSellerAsync();
-        await GetPopularAsync();
+        await GetCategories();
+        await GetBestSellerProducts();
+        await GetPopularProducts();
     }
 
-    private async Task<IEnumerable<Category>> GetCategoriesAsync()
+    private async Task<IEnumerable<Category>> GetCategories()
     {
         try
         {
-            var (categories, errorMessage) = await _apiService.GetCategoriesAsync();
+            var (categories, errorMessage) = await _apiService.GetCategories();
             if (errorMessage == "Unauthorized" && !_loginPageDisplayed)
             {
                 await DisplayLoginPage();
@@ -54,11 +54,11 @@ public partial class HomePage : ContentPage
         }
     }
 
-    private async Task<IEnumerable<Product>> GetBestSellerAsync()
+    private async Task<IEnumerable<Product>> GetBestSellerProducts()
     {
         try
         {
-            var (products, errorMessage) = await _apiService.GetProductsAsync("bestseller", string.Empty);
+            var (products, errorMessage) = await _apiService.GetProducts("bestseller", string.Empty);
 
             if (errorMessage == "Unauthorized" && !_loginPageDisplayed)
             {
@@ -72,7 +72,7 @@ public partial class HomePage : ContentPage
                 return Enumerable.Empty<Product>();
             }
 
-            bestSeller_collection.ItemsSource = products;
+            bestSellerProducts_collection.ItemsSource = products;
             return products;
         }
         catch (Exception ex)
@@ -82,11 +82,11 @@ public partial class HomePage : ContentPage
         }
     }
 
-    private async Task<IEnumerable<Product>> GetPopularAsync()
+    private async Task<IEnumerable<Product>> GetPopularProducts()
     {
         try
         {
-            var (products, errorMessage) = await _apiService.GetProductsAsync("popular", string.Empty);
+            var (products, errorMessage) = await _apiService.GetProducts("popular", string.Empty);
 
             if (errorMessage == "Unauthorized" && !_loginPageDisplayed)
             {
@@ -99,7 +99,7 @@ public partial class HomePage : ContentPage
                 await DisplayAlert("Error", errorMessage ?? "Could not find products.", "OK");
                 return Enumerable.Empty<Product>();
             }
-            popular_collection.ItemsSource = products;
+            popularProducts_collection.ItemsSource = products;
             return products;
         }
         catch (Exception ex)
@@ -121,6 +121,28 @@ public partial class HomePage : ContentPage
         if (currentSelection is null) return;
 
         Navigation.PushAsync(new CategoryProductsPage(currentSelection.Id, currentSelection.Name!,
+            _apiService, _validator));
+
+        ((CollectionView)sender).SelectedItem = null;
+    }
+
+    private void bestSellerProducts_collection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var currentSelection = e.CurrentSelection.FirstOrDefault() as Product;
+        if (currentSelection is null) return;
+
+        Navigation.PushAsync(new ProductDetailsPage(currentSelection.Id, currentSelection.Name!,
+            _apiService, _validator));
+
+        ((CollectionView)sender).SelectedItem = null;
+    }
+
+    private void popularProducts_collection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var currentSelection = e.CurrentSelection.FirstOrDefault() as Product;
+        if (currentSelection is null) return;
+
+        Navigation.PushAsync(new ProductDetailsPage(currentSelection.Id, currentSelection.Name!,
             _apiService, _validator));
 
         ((CollectionView)sender).SelectedItem = null;

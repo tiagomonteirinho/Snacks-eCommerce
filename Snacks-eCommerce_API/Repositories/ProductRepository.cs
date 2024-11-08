@@ -11,17 +11,22 @@ public class ProductRepository : IProductRepository
         _appDbContext = appDbContext;
     }
 
-    public async Task<IEnumerable<Product>> GetBestSellerProductsAsync()
+    public async Task<IEnumerable<Product>> GetBestSellerProducts()
     {
         return await _appDbContext.Products.Where(p => p.BestSeller).ToListAsync();
     }
 
-    public async Task<IEnumerable<Product>> GetPopularProductsAsync()
+    public async Task<IEnumerable<Product>> GetPopularProducts()
     {
         return await _appDbContext.Products.Where(p => p.Popular).ToListAsync();
     }
 
-    public async Task<Product> GetProductDetailAsync(int id)
+    public async Task<IEnumerable<Product>> GetCategoryProducts(int categoryId)
+    {
+        return await _appDbContext.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
+    }
+
+    public async Task<Product> GetProductDetails(int id)
     {
         var productDetail = await _appDbContext.Products.FirstOrDefaultAsync(p => p.Id == id);
 
@@ -29,10 +34,5 @@ public class ProductRepository : IProductRepository
             throw new InvalidOperationException("Product detail not found.");
 
         return productDetail!;
-    }
-
-    public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId)
-    {
-        return await _appDbContext.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
     }
 }

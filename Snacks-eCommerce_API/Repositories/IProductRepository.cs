@@ -2,8 +2,11 @@
 
 public interface IProductRepository
 {
-    Task<IEnumerable<Product>> GetProductsByCategoryAsync(int categoryId);
-    Task<IEnumerable<Product>> GetPopularProductsAsync();
-    Task<IEnumerable<Product>> GetBestSellerProductsAsync();
-    Task<Product> GetProductDetailAsync(int id);
+    Task<IEnumerable<Product>> GetBestSellerProducts();
+
+    Task<IEnumerable<Product>> GetPopularProducts();
+
+    Task<IEnumerable<Product>> GetCategoryProducts(int categoryId);
+
+    Task<Product> GetProductDetails(int id);
 }

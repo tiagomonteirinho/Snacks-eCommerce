@@ -19,15 +19,15 @@ public class ProductsController : ControllerBase
 
         if (productType == "category" && categoryId != null)
         {
-            products = await _productRepository.GetProductsByCategoryAsync(categoryId.Value);
+            products = await _productRepository.GetCategoryProducts(categoryId.Value);
         }
         else if (productType == "popular")
         {
-            products = await _productRepository.GetPopularProductsAsync();
+            products = await _productRepository.GetPopularProducts();
         }
         else if (productType == "bestseller")
         {
-            products = await _productRepository.GetBestSellerProductsAsync();
+            products = await _productRepository.GetBestSellerProducts();
         }
         else
         {
@@ -48,7 +48,7 @@ public class ProductsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProductDetail(int id)
     {
-        var product = await _productRepository.GetProductDetailAsync(id);
+        var product = await _productRepository.GetProductDetails(id);
         if (product is null)
         {
             return NotFound($"That product could not be found.");

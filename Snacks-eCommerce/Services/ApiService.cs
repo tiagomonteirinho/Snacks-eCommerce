@@ -113,15 +113,21 @@ namespace Snacks_eCommerce.Services
             }
         }
 
-        public async Task<(List<Category>? categories, string? errorMessage)> GetCategoriesAsync()
+        public async Task<(List<Category>? categories, string? errorMessage)> GetCategories()
         {
             return await GetAsync<List<Category>>("api/categories");
         }
 
-        public async Task<(List<Product>? products, string? errorMessage)> GetProductsAsync(string productType, string categoryId)
+        public async Task<(List<Product>? products, string? errorMessage)> GetProducts(string productType, string categoryId)
         {
             string endpoint = $"api/products?productType={productType}&categoryId={categoryId}";
             return await GetAsync<List<Product>>(endpoint);
+        }
+
+        public async Task<(Product? productDetails, string? errorMessage)> GetProductDetails(int productId)
+        {
+            string endpoint = $"api/products/{productId}";
+            return await GetAsync<Product>(endpoint);
         }
 
         private async Task<(T? data, string? errorMessage)> GetAsync<T>(string endpoint)
