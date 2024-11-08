@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Snacks_eCommerce.Pages.HomePage"
-             Title="HomePage">
+             x:Class="Snacks_eCommerce.Pages.HomePage">
     
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,3*,Auto,4*"
           RowSpacing="18" Margin="15">
@@ -16,7 +15,8 @@
         <Label Grid.Row="1" Text="Categories" FontSize="Medium"
                TextColor="#a90409" FontAttributes="Bold"/>
 
-        <CollectionView Grid.Row="2" x:Name="categories_collection" SelectionMode="Single">
+        <CollectionView Grid.Row="2" x:Name="categories_collection" SelectionMode="Single"
+                        SelectionChanged="categories_collection_SelectionChanged">
             
             <CollectionView.ItemsLayout>
                 <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
