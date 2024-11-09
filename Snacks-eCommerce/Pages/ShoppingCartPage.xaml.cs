@@ -24,6 +24,19 @@ public partial class ShoppingCartPage : ContentPage
     {
         base.OnAppearing();
         await GetShoppingCartItems();
+
+        bool savedAddress = Preferences.ContainsKey("Address");
+        if (savedAddress)
+        {
+            string name = Preferences.Get("Name", string.Empty);
+            string phone = Preferences.Get("PhoneNumber", string.Empty);
+            string address = Preferences.Get("Address", string.Empty);
+            address_lbl.Text = $"{name}\n{phone}\n{address}";
+        }
+        else
+        {
+            address_lbl.Text = "No address added.";
+        }
     }
 
     private async Task<IEnumerable<ShoppingCartItem>> GetShoppingCartItems()
@@ -80,5 +93,48 @@ public partial class ShoppingCartPage : ContentPage
     {
         _loginPageDisplayed = true;
         await Navigation.PushAsync(new LoginPage(_apiService, _validator));
+    }
+
+    private async void decrement_btn_Clicked(object sender, EventArgs e)
+    {
+        if (sender is Button button && button.BindingContext is ShoppingCartItem shoppingCartItem)
+        {
+            if (shoppingCartItem.Quantity == 1) return;
+            else
+            {
+                shoppingCartItem.Quantity--;
+                UpdateTotal();
+                await _apiService.UpdateShoppingCartItemQuantity(shoppingCartItem.ProductId, "decrease");
+            }
+        }
+    }
+
+    private async void increment_btn_Clicked(object sender, EventArgs e)
+    {
+        if (sender is Button button && button.BindingContext is ShoppingCartItem shoppingCartItem)
+        {
+            shoppingCartItem.Quantity++;
+            UpdateTotal();
+            await _apiService.UpdateShoppingCartItemQuantity(shoppingCartItem.ProductId, "increase");
+        }
+    }
+
+    private async void remove_btn_Clicked(object sender, EventArgs e)
+    {
+        if (sender is ImageButton button && button.BindingContext is ShoppingCartItem shoppingCartItem)
+        {
+            bool response = await DisplayAlert("Confirm", "Do you wish to remove this item from the cart?", "Yes", "No");
+            if (response)
+            {
+                ShoppingCartItems.Remove(shoppingCartItem);
+                UpdateTotal();
+                await _apiService.UpdateShoppingCartItemQuantity(shoppingCartItem.ProductId, "remove");
+            }
+        }
+    }
+
+    private void changeAddress_imgBtn_Clicked(object sender, EventArgs e)
+    {
+        Navigation.PushAsync(new AddressPage());
     }
 }

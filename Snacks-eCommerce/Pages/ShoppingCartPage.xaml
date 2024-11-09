@@ -25,18 +25,18 @@
                             </Frame>
                             
                             <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
-                                   Text="{Binding Name}" FontSize="Subtitle" 
+                                   Text="{Binding ProductName}" FontSize="Subtitle" 
                                    FontAttributes="Bold"
                                    HorizontalOptions="Start" VerticalOptions="Center"/>
 
                             <Label Grid.Row="1" Grid.Column="1"
-                                   Text="{Binding Price,StringFormat='{0:F2}€'}" 
+                                   Text="{Binding Price, StringFormat='{0:F2}€'}" 
                                    FontAttributes="Bold"
                                    HorizontalOptions="Start" VerticalOptions="Center"/>
 
                             <HorizontalStackLayout Grid.Row="2" Grid.Column="1" 
                                                    Spacing="10">
-                                <Button x:Name="decrement_btn" 
+                                <Button x:Name="decrement_btn" Clicked="decrement_btn_Clicked"
                                         Text="-" FontAttributes="Bold" TextColor="Black"
                                         CornerRadius="8" BackgroundColor="White"
                                         Padding="0" BorderWidth="1" BorderColor="Black"
@@ -47,7 +47,7 @@
                                        TextColor="#80574D" FontAttributes="Bold"
                                        VerticalTextAlignment="Center"/>
 
-                                <Button x:Name="increment_btn" 
+                                <Button x:Name="increment_btn" Clicked="increment_btn_Clicked"
                                         Text="+" FontAttributes="Bold" TextColor="Black"
                                         CornerRadius="8" BackgroundColor="#18565f"
                                         Padding="0" BorderWidth="1" BorderColor="Black"
@@ -55,8 +55,8 @@
                                         HorizontalOptions="Center" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
 
-                            <ImageButton Grid.Row="2" Grid.Column="2" x:Name="remove_btn" 
-                                         Source="delete" Padding="0"
+                            <ImageButton Grid.Row="2" Grid.Column="2" Clicked="remove_btn_Clicked"
+                                         x:Name="remove_btn" Source="delete" Padding="0"
                                          WidthRequest="25" HeightRequest="25"
                                          HorizontalOptions="Center" VerticalOptions="Center"/>
                         </Grid>
@@ -67,11 +67,11 @@
 
         <Frame Grid.Row="2" Padding="10" BackgroundColor="White" BorderColor="White">
             <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="8*,2*">
-                <Label Grid.Row="0" Grid.Column="0" Text=" Delivery Address"
+                <Label Grid.Row="0" Grid.Column="0" Text="Delivery Address"
                        FontAttributes="Bold" VerticalOptions="Start"/>
 
-                <ImageButton Grid.Row="0" Grid.Column="1" x:Name="changeAddress_imgBtn"
-                             Source="edit" Padding="0"
+                <ImageButton Grid.Row="0" Grid.Column="1" Clicked="changeAddress_imgBtn_Clicked"
+                             x:Name="changeAddress_imgBtn" Source="edit" Padding="0"
                              WidthRequest="25" HeightRequest="25"
                              HorizontalOptions="End" VerticalOptions="Start"/>
 

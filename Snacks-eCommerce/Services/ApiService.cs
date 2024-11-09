@@ -152,7 +152,7 @@ namespace Snacks_eCommerce.Services
                 }
                 else
                 {
-                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
                         string errorMessage = "Unauthorized";
                         _logger.LogWarning(errorMessage);
@@ -193,7 +193,7 @@ namespace Snacks_eCommerce.Services
             }
         }
 
-        public async Task<ApiResponse<bool>> AddItemToCart(ShoppingCart shoppingCart)
+        public async Task<ApiResponse<bool>> AddItemToShoppingCart(ShoppingCart shoppingCart)
         {
             try
             {
@@ -215,6 +215,66 @@ namespace Snacks_eCommerce.Services
             {
                 _logger.LogError($"Could not add item to cart: {ex.Message}");
                 return new ApiResponse<bool> { ErrorMessage = ex.Message };
+            }
+        }
+
+        public async Task<(bool data, string? errorMessage)> UpdateShoppingCartItemQuantity(int productId, string action)
+        {
+            try
+            {
+                var content = new StringContent(string.Empty, Encoding.UTF8, "application/json");
+                var response = await PutRequest($"api/shoppingCartItems?productId={productId}&action={action}", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return (true, null);
+                }
+                else
+                {
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        string errorMessage = "Unauthorized";
+                        _logger.LogWarning(errorMessage);
+                        return (false, errorMessage);
+                    }
+
+                    string generalErrorMessage = $"Could not process HTTP request: {response.ReasonPhrase}";
+                    _logger.LogError(generalErrorMessage);
+                    return (false, generalErrorMessage);
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                string errorMessage = $"Could not process HTTP request: {ex.Message}";
+                _logger.LogError(ex, errorMessage);
+                return (false, errorMessage);
+            }
+            catch (JsonException ex)
+            {
+                string errorMessage = $"Could not deserialize JSON: {ex.Message}";
+                _logger.LogError(ex, errorMessage);
+                return (false, errorMessage);
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = $"Could not process request: {ex.Message}";
+                _logger.LogError(ex, errorMessage);
+                return (false, errorMessage);
+            }
+        }
+
+        private async Task<HttpResponseMessage> PutRequest(string uri, HttpContent content)
+        {
+            var url = AppConfig.BaseUrl + uri;
+            try
+            {
+                AddAuthorizationHeader();
+                var result = await _httpClient.PutAsync(url, content);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Could not process HTTP request to {uri}: {ex.Message}");
+                return new HttpResponseMessage(HttpStatusCode.BadRequest);
             }
         }
     }

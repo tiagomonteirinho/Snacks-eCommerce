@@ -112,7 +112,7 @@ public partial class ProductDetailsPage : ContentPage
                 UserId = Preferences.Get("userid", 0)
             };
 
-            var response = await _apiService.AddItemToCart(shoppingCart);
+            var response = await _apiService.AddItemToShoppingCart(shoppingCart);
             if (response.Data)
             {
                 await DisplayAlert("Success", "Item successfully added to cart.", "OK");
