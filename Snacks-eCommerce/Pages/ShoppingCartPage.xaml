@@ -106,7 +106,7 @@
                     <Image Source="rightarrow" VerticalOptions="Center"
                            WidthRequest="25" HeightRequest="25"/>
                     <HorizontalStackLayout.GestureRecognizers>
-                        <TapGestureRecognizer x:Name="confirmOrder_tap"/>
+                        <TapGestureRecognizer x:Name="confirmOrder_tap" Tapped="confirmOrder_tap_Tapped"/>
                     </HorizontalStackLayout.GestureRecognizers>
                 </HorizontalStackLayout>
             </Grid>

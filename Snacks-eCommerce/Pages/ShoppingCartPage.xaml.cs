@@ -10,6 +10,7 @@ public partial class ShoppingCartPage : ContentPage
     private readonly ApiService _apiService;
     private readonly IValidator _validator;
     private bool _loginPageDisplayed = false;
+    private bool _isNavigatingToEmptyShoppingCartPage = false;
 
     private ObservableCollection<ShoppingCartItem> ShoppingCartItems = new ObservableCollection<ShoppingCartItem>();
 
@@ -23,8 +24,22 @@ public partial class ShoppingCartPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        await GetShoppingCartItems();
 
+        if (IsNavigatingToEmptyShoppingCartPage()) return;
+
+        bool hasItems = await GetShoppingCartItems();
+        if (hasItems)
+        {
+            DisplayAddress();
+        }
+        else
+        {
+            await NavigateToEmptyShoppingCart();
+        }
+    }
+
+    private void DisplayAddress()
+    {
         bool savedAddress = Preferences.ContainsKey("Address");
         if (savedAddress)
         {
@@ -39,7 +54,14 @@ public partial class ShoppingCartPage : ContentPage
         }
     }
 
-    private async Task<IEnumerable<ShoppingCartItem>> GetShoppingCartItems()
+    private async Task NavigateToEmptyShoppingCart()
+    {
+        address_lbl.Text = string.Empty;
+        _isNavigatingToEmptyShoppingCartPage = true;
+        await Navigation.PushAsync(new EmptyShoppingCartPage());
+    }
+
+    private async Task<bool> GetShoppingCartItems()
     {
         try
         {
@@ -49,13 +71,13 @@ public partial class ShoppingCartPage : ContentPage
             if (errorMessage == "Unauthorized" && !_loginPageDisplayed)
             {
                 await DisplayLoginPage();
-                return Enumerable.Empty<ShoppingCartItem>();
+                return false;
             }
 
             if (shoppingCartItems is null)
             {
-                await DisplayAlert("Error", errorMessage ?? "Could not find shopping cart items.", "OK");
-                return Enumerable.Empty<ShoppingCartItem>();
+                //await DisplayAlert("Error", errorMessage ?? "Could not find shopping cart items.", "OK");
+                return false;
             }
 
             ShoppingCartItems.Clear();
@@ -66,13 +88,19 @@ public partial class ShoppingCartPage : ContentPage
 
             items_cv.ItemsSource = ShoppingCartItems;
             UpdateTotal();
-            return shoppingCartItems;
+
+            if (!ShoppingCartItems.Any()) 
+            { 
+                return false; 
+            }
+
+            return true;
 
         }
         catch (Exception ex)
         {
             await DisplayAlert("Error", $"Could not process request: {ex.Message}", "OK");
-            return Enumerable.Empty<ShoppingCartItem>();
+            return false;
         }
     }
 
@@ -87,6 +115,17 @@ public partial class ShoppingCartPage : ContentPage
         {
             DisplayAlert("Error", $"Could not process request: {ex.Message}", "OK");
         }
+    }
+
+    private bool IsNavigatingToEmptyShoppingCartPage()
+    {
+        if (_isNavigatingToEmptyShoppingCartPage)
+        {
+            _isNavigatingToEmptyShoppingCartPage = false;
+            return true;
+        }
+
+        return false;
     }
 
     private async Task DisplayLoginPage()
@@ -136,5 +175,39 @@ public partial class ShoppingCartPage : ContentPage
     private void changeAddress_imgBtn_Clicked(object sender, EventArgs e)
     {
         Navigation.PushAsync(new AddressPage());
+    }
+
+    private async void confirmOrder_tap_Tapped(object sender, TappedEventArgs e)
+    {
+        if (ShoppingCartItems is null || !ShoppingCartItems.Any())
+        {
+            await DisplayAlert("Error", "Could not find shopping cart items.", "OK");
+            return;
+        }
+
+        var order = new Order()
+        {
+            Address = address_lbl.Text,
+            Total = Convert.ToDecimal(total_lbl.Text),
+            UserId = Preferences.Get("userid", 0)
+        };
+
+        var response = await _apiService.ConfirmOrder(order);
+        if (response.HasError)
+        {
+            if (response.ErrorMessage == "Unauthorized")
+            {
+                await DisplayLoginPage();
+                return;
+            }
+
+            await DisplayAlert("Error", $"Could not process request: {response.ErrorMessage}", "OK");
+            return;
+        }
+
+        ShoppingCartItems.Clear();
+        address_lbl.Text = "No address added.";
+        total_lbl.Text = "0.00";
+        await Navigation.PushAsync(new OrderConfirmedPage());
     }
 }

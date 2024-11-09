@@ -58,8 +58,10 @@
 
 	<ItemGroup>
 		<None Remove="Resources\Images\cart.png" />
+		<None Remove="Resources\Images\confirmed.gif" />
 		<None Remove="Resources\Images\delete.png" />
 		<None Remove="Resources\Images\edit.png" />
+		<None Remove="Resources\Images\emptycart.jpg" />
 		<None Remove="Resources\Images\faq.png" />
 		<None Remove="Resources\Images\foodicon.png" />
 		<None Remove="Resources\Images\heart.png" />
@@ -89,6 +91,12 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\AddressPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\EmptyShoppingCartPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\OrderConfirmedPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\ShoppingCartPage.xaml">

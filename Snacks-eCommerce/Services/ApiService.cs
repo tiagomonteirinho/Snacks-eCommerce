@@ -202,11 +202,9 @@ namespace Snacks_eCommerce.Services
                 var response = await PostRequest("api/ShoppingCartItems", content);
                 if (!response.IsSuccessStatusCode)
                 {
+                    string errorMessage = response.StatusCode == HttpStatusCode.Unauthorized ? "Unauthorized" : $"Could not process request: {response.ReasonPhrase}";
                     _logger.LogError($"Could not process request: {response.StatusCode}");
-                    return new ApiResponse<bool>
-                    {
-                        ErrorMessage = $"Could not process request: {response.StatusCode}"
-                    };
+                    return new ApiResponse<bool> { ErrorMessage = errorMessage };
                 }
 
                 return new ApiResponse<bool> { Data = true };
@@ -275,6 +273,29 @@ namespace Snacks_eCommerce.Services
             {
                 _logger.LogError($"Could not process HTTP request to {uri}: {ex.Message}");
                 return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            }
+        }
+
+        public async Task<ApiResponse<bool>> ConfirmOrder(Order order)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(order, _serializerOptions);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var response = await PostRequest("api/Orders", content);
+                if (!response.IsSuccessStatusCode)
+                {
+                    string errorMessage = response.StatusCode == HttpStatusCode.Unauthorized ? "Unauthorized" : $"Could not process request: {response.ReasonPhrase}";
+                    _logger.LogError($"Error in HTTP request: {response.StatusCode}");
+                    return new ApiResponse<bool> { ErrorMessage = errorMessage };
+                }
+
+                return new ApiResponse<bool> { Data = true };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Could not confirm order: {ex.Message}");
+                return new ApiResponse<bool> { ErrorMessage = ex.Message };
             }
         }
     }
