@@ -130,6 +130,12 @@ namespace Snacks_eCommerce.Services
             return await GetAsync<Product>(endpoint);
         }
 
+        public async Task<(List<ShoppingCartItem>? shoppingCartItems, string? ErrorMessage)> GetShoppingCartItems(int userId)
+        {
+            string endpoint = $"api/shoppingCartItems/{userId}";
+            return await GetAsync<List<ShoppingCartItem>>(endpoint);
+        }
+
         private async Task<(T? data, string? errorMessage)> GetAsync<T>(string endpoint)
         {
             try

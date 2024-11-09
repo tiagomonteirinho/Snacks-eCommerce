@@ -46,7 +46,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetProductDetail(int id)
+    public async Task<IActionResult> GetProductDetails(int id)
     {
         var product = await _productRepository.GetProductDetails(id);
         if (product is null)

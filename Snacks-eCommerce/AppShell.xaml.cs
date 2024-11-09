@@ -20,7 +20,7 @@ namespace Snacks_eCommerce
         private void ConfigureShell()
         {
             var homePage = new HomePage(_apiService, _validator);
-            var cartPage = new CartPage();
+            var shoppingCartPage = new ShoppingCartPage(_apiService, _validator);
             var favouritesPage = new FavouritesPage();
             var accountPage = new AccountPage();
 
@@ -29,7 +29,7 @@ namespace Snacks_eCommerce
                 Items =
                 {
                     new ShellContent { Title = "Home", Icon = "home", Content = homePage },
-                    new ShellContent { Title = "Cart", Icon = "cart", Content = cartPage },
+                    new ShellContent { Title = "Cart", Icon = "cart", Content = shoppingCartPage },
                     new ShellContent { Title = "Favourites", Icon = "heart", Content = favouritesPage },
                     new ShellContent { Title = "Account", Icon = "profile", Content = accountPage }
                 }
