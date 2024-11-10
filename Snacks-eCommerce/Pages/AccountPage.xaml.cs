@@ -116,4 +116,9 @@ public partial class AccountPage : ContentPage
             await DisplayAlert("Error", $"Could not process request: {ex.Message}", "OK");
         }
     }
+
+    private void orders_tap_Tapped(object sender, TappedEventArgs e)
+    {
+        Navigation.PushAsync(new OrdersPage(_apiService, _validator));
+    }
 }

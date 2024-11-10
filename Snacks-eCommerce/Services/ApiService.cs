@@ -142,6 +142,18 @@ public class ApiService
         return await GetAsync<UserImage>(endpoint);
     }
 
+    public async Task<(List<UserOrder>? userOrders, string? errorMessage)> GetUserOrders(int userId)
+    {
+        string endpoint = $"api/orders/GetUserOrders/{userId}";
+        return await GetAsync<List<UserOrder>>(endpoint);
+    }
+
+    public async Task<(List<OrderDetail>? orderDetails, string? errorMessage)> GetOrderDetails(int orderId)
+    {
+        string endpoint = $"api/orders/GetOrderDetails/{orderId}";
+        return await GetAsync<List<OrderDetail>>(endpoint);
+    }
+
     private async Task<(T? data, string? errorMessage)> GetAsync<T>(string endpoint)
     {
         try

@@ -21,11 +21,11 @@
 
             <HorizontalStackLayout Spacing="10">
 
-                <Image Source="pedidos" HeightRequest="30"/>
+                <Image Source="orders.png" HeightRequest="30"/>
                 <Label Text="My Orders" FontSize="Small" FontAttributes="Bold"/>
 
                 <HorizontalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer x:Name="orders_tap"/>
+                    <TapGestureRecognizer x:Name="orders_tap" Tapped="orders_tap_Tapped"/>
                 </HorizontalStackLayout.GestureRecognizers>
 
             </HorizontalStackLayout>
@@ -34,7 +34,7 @@
 
             <HorizontalStackLayout Spacing="10">
 
-                <Image Source="perfilconfig" HeightRequest="30"/>
+                <Image Source="profilesettings.png" HeightRequest="30"/>
                 <Label Text="My Account" FontSize="Small" FontAttributes="Bold"/>
 
                 <HorizontalStackLayout.GestureRecognizers>
@@ -47,7 +47,7 @@
 
             <HorizontalStackLayout Spacing="10">
 
-                <Image Source="perguntas" HeightRequest="30"/>
+                <Image Source="faq.png" HeightRequest="30"/>
                 <Label Text="FAQ" FontSize="Small" FontAttributes="Bold"/>
 
                 <HorizontalStackLayout.GestureRecognizers>

@@ -30,8 +30,8 @@ public class OrdersController : ControllerBase
                 Id = od.Id,
                 Quantity = od.Quantity,
                 Subtotal = od.Total,
-                ProductName = od.Product!.Name,
-                ProductImage = od.Product.ImageUrl,
+                Name = od.Product!.Name,
+                ImageUrl = od.Product.ImageUrl,
                 Price = od.Product.Price
             })
             .ToListAsync();
@@ -47,7 +47,7 @@ public class OrdersController : ControllerBase
     [HttpGet("[action]/{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetOrdersByUser(int userId)
+    public async Task<IActionResult> GetUserOrders(int userId)
     {
         var orders = await _appDbContext.Orders
             .Where(o => o.UserId == userId)
