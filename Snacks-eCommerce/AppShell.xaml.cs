@@ -2,38 +2,37 @@
 using Snacks_eCommerce.Services;
 using Snacks_eCommerce.Validations;
 
-namespace Snacks_eCommerce
+namespace Snacks_eCommerce;
+
+public partial class AppShell : Shell
 {
-    public partial class AppShell : Shell
+    private readonly ApiService _apiService;
+    private readonly IValidator _validator;
+
+    public AppShell(ApiService apiService, IValidator validator)
     {
-        private readonly ApiService _apiService;
-        private readonly IValidator _validator;
+        InitializeComponent();
+        _apiService = apiService;
+        _validator = validator;
+        ConfigureShell();
+    }
 
-        public AppShell(ApiService apiService, IValidator validator)
+    private void ConfigureShell()
+    {
+        var homePage = new HomePage(_apiService, _validator);
+        var shoppingCartPage = new ShoppingCartPage(_apiService, _validator);
+        var favouritesPage = new FavouritesPage(_apiService, _validator);
+        var accountPage = new AccountPage(_apiService, _validator);
+
+        Items.Add(new TabBar
         {
-            InitializeComponent();
-            _apiService = apiService;
-            _validator = validator;
-            ConfigureShell();
-        }
-
-        private void ConfigureShell()
-        {
-            var homePage = new HomePage(_apiService, _validator);
-            var shoppingCartPage = new ShoppingCartPage(_apiService, _validator);
-            var favouritesPage = new FavouritesPage(_apiService, _validator);
-            var accountPage = new AccountPage();
-
-            Items.Add(new TabBar
+            Items =
             {
-                Items =
-                {
-                    new ShellContent { Title = "Home", Icon = "home", Content = homePage },
-                    new ShellContent { Title = "Cart", Icon = "cart", Content = shoppingCartPage },
-                    new ShellContent { Title = "Favourites", Icon = "heart", Content = favouritesPage },
-                    new ShellContent { Title = "Account", Icon = "profile", Content = accountPage }
-                }
-            });
-        }
+                new ShellContent { Title = "Home", Icon = "home", Content = homePage },
+                new ShellContent { Title = "Cart", Icon = "cart", Content = shoppingCartPage },
+                new ShellContent { Title = "Favourites", Icon = "heart", Content = favouritesPage },
+                new ShellContent { Title = "Account", Icon = "profile", Content = accountPage }
+            }
+        });
     }
 }

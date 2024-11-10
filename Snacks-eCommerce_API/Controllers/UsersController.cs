@@ -74,7 +74,7 @@ public class UsersController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("uploadimage")]
+    [HttpPost("UploadUserImage")]
     public async Task<IActionResult> UploadUserImage(IFormFile image)
     {
         var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
@@ -102,7 +102,7 @@ public class UsersController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("userimage")]
+    [HttpGet("UserImage")]
     public async Task<IActionResult> GetUserImage()
     {
         var userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;

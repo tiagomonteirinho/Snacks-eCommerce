@@ -17,7 +17,7 @@ public partial class HomePage : ContentPage
         _apiService = apiService ?? throw new ArgumentNullException(nameof(apiService));
         _validator = validator;
         userName_label1.Text = "Hello, " + Preferences.Get("username", string.Empty);
-        Title = AppConfig.PageTitle;
+        Title = AppConfig.HomePageTitle;
     }
 
     protected override async void OnAppearing()

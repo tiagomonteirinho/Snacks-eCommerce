@@ -76,6 +76,7 @@
 		<None Remove="Resources\Images\profilesettings.png" />
 		<None Remove="Resources\Images\rightarrow.png" />
 		<None Remove="Resources\Images\uploadphoto.png" />
+		<None Remove="Resources\Images\userimage.jpg" />
 		<None Remove="Resources\Splash\splash.svg" />
 	</ItemGroup>
 
