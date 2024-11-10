@@ -9,7 +9,7 @@
                Aspect="AspectFit" HeightRequest="320"
                VerticalOptions="Start"/>
 
-        <ImageButton Grid.Row="0" x:Name="favourite_imgBtn"
+        <ImageButton Grid.Row="0" x:Name="favourite_imgBtn" Clicked="favourite_imgBtn_Clicked"
                      Source="heart" CornerRadius="15"
                      BackgroundColor="White"
                      Margin="20" Padding="5"

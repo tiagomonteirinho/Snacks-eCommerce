@@ -21,7 +21,7 @@ namespace Snacks_eCommerce
         {
             var homePage = new HomePage(_apiService, _validator);
             var shoppingCartPage = new ShoppingCartPage(_apiService, _validator);
-            var favouritesPage = new FavouritesPage();
+            var favouritesPage = new FavouritesPage(_apiService, _validator);
             var accountPage = new AccountPage();
 
             Items.Add(new TabBar

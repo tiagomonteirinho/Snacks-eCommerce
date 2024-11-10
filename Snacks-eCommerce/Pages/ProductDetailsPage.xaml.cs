@@ -10,6 +10,8 @@ public partial class ProductDetailsPage : ContentPage
     private readonly IValidator _validator;
     private int _productId;
     private bool _loginPageDisplayed = false;
+    private FavouritesService _favouritesService = new FavouritesService();
+    private string? _imageUrl;
 
     public ProductDetailsPage(int productId, string productName, ApiService apiService, IValidator validator)
     {
@@ -24,6 +26,7 @@ public partial class ProductDetailsPage : ContentPage
     {
         base.OnAppearing();
         await GetProductDetails(_productId);
+        UpdateFavouriteButton();
     }
 
     private async Task<Product?> GetProductDetails(int productId)
@@ -49,6 +52,7 @@ public partial class ProductDetailsPage : ContentPage
             unitPrice_lbl.Text = product.Price.ToString();
             description_lbl.Text = product.Detail;
             total_lbl.Text = product.Price.ToString();
+            _imageUrl = product.ImagePath;
         }
         else
         {
@@ -63,6 +67,19 @@ public partial class ProductDetailsPage : ContentPage
     {
         _loginPageDisplayed = true;
         await Navigation.PushAsync(new LoginPage(_apiService, _validator));
+    }
+
+    private async void UpdateFavouriteButton()
+    {
+        var existingFavourite = await _favouritesService.ReadAsync(_productId);
+        if (existingFavourite != null)
+        {
+            favourite_imgBtn.Source = "heartfill";
+        }
+        else
+        {
+            favourite_imgBtn.Source = "heart";
+        }
     }
 
     private void decrement_btn_Clicked(object sender, EventArgs e)
@@ -124,6 +141,38 @@ public partial class ProductDetailsPage : ContentPage
             {
                 await DisplayAlert("Error", $"Could not process request: {response.ErrorMessage}", "OK");
             }
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error", $"Could not process request: {ex.Message}", "OK");
+        }
+    }
+
+    private async void favourite_imgBtn_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var existingFavourite = await _favouritesService.ReadAsync(_productId);
+            if (existingFavourite != null)
+            {
+                await _favouritesService.DeleteAsync(existingFavourite);
+            }
+            else
+            {
+                var favouriteProduct = new FavouriteProduct()
+                {
+                    ProductId = _productId,
+                    Name = name_lbl.Text,
+                    Price = Convert.ToDecimal(unitPrice_lbl.Text),
+                    Detail = description_lbl.Text,
+                    ImageUrl = _imageUrl,
+                    IsFavourite = true,
+                };
+
+                await _favouritesService.CreateAsync(favouriteProduct);
+            }
+
+            UpdateFavouriteButton();
         }
         catch (Exception ex)
         {
