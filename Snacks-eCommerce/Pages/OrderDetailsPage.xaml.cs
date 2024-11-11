@@ -22,8 +22,10 @@ public partial class OrderDetailsPage : ContentPage
     {
         try
         {
-            var (orderDetails, errorMessage) = await _apiService.GetOrderDetails(orderId);
+            orderLoaded_ai.IsRunning = true;
+            orderLoaded_ai.IsVisible = true;
 
+            var (orderDetails, errorMessage) = await _apiService.GetOrderDetails(orderId);
             if (errorMessage == "Unauthorized" && !_loginPageDisplayed)
             {
                 await DisplayLoginPage();
@@ -43,6 +45,11 @@ public partial class OrderDetailsPage : ContentPage
         catch (Exception)
         {
             await DisplayAlert("Error", "Could not process request.", "OK");
+        }
+        finally
+        {
+            orderLoaded_ai.IsRunning = false;
+            orderLoaded_ai.IsVisible = false;
         }
     }
 

@@ -21,7 +21,7 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetOrderDetails(int orderId)
     {
-        var orderDetails = await _appDbContext.OrderDetails
+        var orderDetails = await _appDbContext.OrderDetails.AsNoTracking()
             .Where(od => od.OrderId == orderId)
             .Include(od => od.Order)
             .Include(od => od.Product)
@@ -36,9 +36,9 @@ public class OrdersController : ControllerBase
             })
             .ToListAsync();
 
-        if (orderDetails == null || orderDetails.Count == 0)
+        if (orderDetails is null || !orderDetails.Any())
         {
-            return NotFound("Product details could not be found.");
+            return NotFound("Could not find order details.");
         }
 
         return Ok(orderDetails);
@@ -49,7 +49,7 @@ public class OrdersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetUserOrders(int userId)
     {
-        var orders = await _appDbContext.Orders
+        var orders = await _appDbContext.Orders.AsNoTracking()
             .Where(o => o.UserId == userId)
             .OrderByDescending(o => o.OrderDate)
             .Select(o => new
@@ -62,7 +62,7 @@ public class OrdersController : ControllerBase
 
         if (orders == null || orders.Count == 0)
         {
-            return NotFound("User orders could not be found.");
+            return NotFound("Could not find user orders.");
         }
 
         return Ok(orders);

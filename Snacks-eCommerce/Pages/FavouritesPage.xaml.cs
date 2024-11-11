@@ -15,7 +15,9 @@ public partial class FavouritesPage : ContentPage
         InitializeComponent();
         _apiService = apiService;
         _validator = validator;
-        _favouritesService = new FavouritesService();
+
+        //_favouritesService = new FavouritesService();
+        _favouritesService = ServiceFactory.CreateFavouritesService();
     }
 
     protected override async void OnAppearing()
