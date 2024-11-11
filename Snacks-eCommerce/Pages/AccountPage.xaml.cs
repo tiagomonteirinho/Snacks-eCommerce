@@ -121,4 +121,20 @@ public partial class AccountPage : ContentPage
     {
         Navigation.PushAsync(new OrdersPage(_apiService, _validator));
     }
+
+    private void account_tap_Tapped(object sender, TappedEventArgs e)
+    {
+        Navigation.PushAsync(new AccountSettingsPage(_apiService));
+    }
+
+    private void faq_tap_Tapped(object sender, TappedEventArgs e)
+    {
+        Navigation.PushAsync(new FaqPage());
+    }
+
+    private void logout_imgBtn_Clicked(object sender, EventArgs e)
+    {
+        Preferences.Set("accesstoken", string.Empty);
+        Application.Current!.MainPage = new NavigationPage(new LoginPage(_apiService, _validator));
+    }
 }

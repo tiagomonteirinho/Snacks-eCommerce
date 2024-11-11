@@ -38,7 +38,7 @@
                 <Label Text="My Account" FontSize="Small" FontAttributes="Bold"/>
 
                 <HorizontalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer x:Name="account_tap"/>
+                    <TapGestureRecognizer x:Name="account_tap" Tapped="account_tap_Tapped"/>
                 </HorizontalStackLayout.GestureRecognizers>
 
             </HorizontalStackLayout>
@@ -51,14 +51,14 @@
                 <Label Text="FAQ" FontSize="Small" FontAttributes="Bold"/>
 
                 <HorizontalStackLayout.GestureRecognizers>
-                    <TapGestureRecognizer x:Name="Faq_tap"/>
+                    <TapGestureRecognizer x:Name="faq_tap" Tapped="faq_tap_Tapped"/>
                 </HorizontalStackLayout.GestureRecognizers>
 
             </HorizontalStackLayout>
 
         </VerticalStackLayout>
 
-        <ImageButton Grid.Row="2" Source="logout.png"
+        <ImageButton Grid.Row="2" Source="logout.png" Clicked="logout_imgBtn_Clicked"
                      x:Name="logout_imgBtn" ToolTipProperties.Text="Logout"
                      BackgroundColor="Transparent" Padding="5"
                      WidthRequest="60"
