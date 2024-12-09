@@ -43,7 +43,7 @@
             <CollectionView.Footer>
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
                     <Label Text="Total:" />
-                    <Label  x:Name="total_lbl" />
+                    <Label x:Name="total_lbl" />
                 </HorizontalStackLayout>
             </CollectionView.Footer>
             

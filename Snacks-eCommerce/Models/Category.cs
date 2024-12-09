@@ -1,13 +1,12 @@
-﻿namespace Snacks_eCommerce.Models
+﻿namespace Snacks_eCommerce.Models;
+
+public class Category
 {
-    public class Category
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string? Name { get; set; }
+    public string? Name { get; set; }
 
-        public string? ImageUrl { get; set; }
+    public string? ImageUrl { get; set; }
 
-        public string? ImagePath => AppConfig.BaseUrl + ImageUrl;
-    }
+    public string? ImagePath => AppConfig.BaseUrl + ImageUrl;
 }

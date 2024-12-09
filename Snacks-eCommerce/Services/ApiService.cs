@@ -84,7 +84,13 @@ public class ApiService
 
             var jsonResult = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<Token>(jsonResult, _serializerOptions);
+            if (result == null)
+            {
+                _logger.LogError("Deserialization returned null.");
+                return new ApiResponse<bool> { ErrorMessage = "Invalid response format." };
+            }
 
+            // Keep data in device, without having to generate it again.
             Preferences.Set("accesstoken", result!.AccessToken);
             Preferences.Set("userid", (int)result.UserId!);
             Preferences.Set("username", result.UserName);
@@ -94,6 +100,53 @@ public class ApiService
         catch (Exception ex)
         {
             _logger.LogError($"Could not log in: {ex.Message}");
+            return new ApiResponse<bool> { ErrorMessage = ex.Message };
+        }
+    }
+
+    public async Task<ApiResponse<bool>> ConfirmOrder(Order order)
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(order, _serializerOptions);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var response = await PostRequest("api/Orders", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMessage = response.StatusCode == HttpStatusCode.Unauthorized ? "Unauthorized" : $"Could not process request: {response.ReasonPhrase}";
+                _logger.LogError($"Could not process request: {response.StatusCode}");
+                return new ApiResponse<bool> { ErrorMessage = errorMessage };
+            }
+
+            return new ApiResponse<bool> { Data = true };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Could not confirm order: {ex.Message}");
+            return new ApiResponse<bool> { ErrorMessage = ex.Message };
+        }
+    }
+
+    public async Task<ApiResponse<bool>> UploadUserImage(byte[] imageArray)
+    {
+        try
+        {
+            // MultipartFormDataContent: HTTP request form data content.
+            var content = new MultipartFormDataContent();
+            content.Add(new ByteArrayContent(imageArray), "image", "image.jpg");
+            var response = await PostRequest("api/users/UploadUserImage", content);
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorMessage = response.StatusCode == HttpStatusCode.Unauthorized ? "Unauthorized" : $"Could not process request: {response.ReasonPhrase}";
+                _logger.LogError($"Could not process request: {response.StatusCode}");
+                return new ApiResponse<bool> { ErrorMessage = errorMessage };
+            }
+
+            return new ApiResponse<bool> { Data = true };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Could not upload image: {ex.Message}");
             return new ApiResponse<bool> { ErrorMessage = ex.Message };
         }
     }
@@ -291,53 +344,6 @@ public class ApiService
         {
             _logger.LogError($"Could not process HTTP request to {uri}: {ex.Message}");
             return new HttpResponseMessage(HttpStatusCode.BadRequest);
-        }
-    }
-
-    public async Task<ApiResponse<bool>> ConfirmOrder(Order order)
-    {
-        try
-        {
-            var json = JsonSerializer.Serialize(order, _serializerOptions);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await PostRequest("api/Orders", content);
-            if (!response.IsSuccessStatusCode)
-            {
-                string errorMessage = response.StatusCode == HttpStatusCode.Unauthorized ? "Unauthorized" : $"Could not process request: {response.ReasonPhrase}";
-                _logger.LogError($"Could not process request: {response.StatusCode}");
-                return new ApiResponse<bool> { ErrorMessage = errorMessage };
-            }
-
-            return new ApiResponse<bool> { Data = true };
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Could not confirm order: {ex.Message}");
-            return new ApiResponse<bool> { ErrorMessage = ex.Message };
-        }
-    }
-
-    public async Task<ApiResponse<bool>> UploadUserImage(byte[] imageArray)
-    {
-        try
-        {
-            // MultipartFormDataContent: HTTP request form data content.
-            var content = new MultipartFormDataContent();
-            content.Add(new ByteArrayContent(imageArray), "image", "image.jpg");
-            var response = await PostRequest("api/users/UploadUserImage", content);
-            if (!response.IsSuccessStatusCode)
-            {
-                string errorMessage = response.StatusCode == HttpStatusCode.Unauthorized ? "Unauthorized" : $"Could not process request: {response.ReasonPhrase}";
-                _logger.LogError($"Could not process request: {response.StatusCode}");
-                return new ApiResponse<bool> { ErrorMessage = errorMessage };
-            }
-
-            return new ApiResponse<bool> { Data = true };
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Could not upload image: {ex.Message}");
-            return new ApiResponse<bool> { ErrorMessage = ex.Message };
         }
     }
 }

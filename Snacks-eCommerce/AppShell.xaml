@@ -5,9 +5,16 @@
        xmlns:local="clr-namespace:Snacks_eCommerce"
        xmlns:pages="clr-namespace:Snacks_eCommerce.Pages"
        Shell.FlyoutBehavior="Disabled"
-       Shell.TabBarBackgroundColor="#a90409"
+       Shell.NavBarHasShadow="True"
+       Shell.DisabledColor="#BFBFBF"
+       Shell.TitleColor="White"
+       Shell.UnselectedColor="White"
+       Shell.BackgroundColor="#a90409"
+       Shell.ForegroundColor="White"
+       Shell.TabBarDisabledColor="#BFBFBF"
        Shell.TabBarTitleColor="White"
-       Shell.TabBarUnselectedColor="FloralWhite"
-       Title="Snacks_eCommerce">
+       Shell.TabBarUnselectedColor="White"
+       Shell.TabBarBackgroundColor="#a90409"
+       Shell.TabBarForegroundColor="White">
     
 </Shell>

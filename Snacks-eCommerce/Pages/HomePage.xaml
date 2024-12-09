@@ -6,7 +6,7 @@
     <Grid RowDefinitions="Auto,Auto,Auto,Auto,3*,Auto,4*"
           RowSpacing="18" Margin="15">
 
-        <VerticalStackLayout Grid.Row="0"  Spacing="3">
+        <VerticalStackLayout Grid.Row="0" Spacing="3">
             <Label x:Name="userName_label1" FontSize="Large"/>
             <Label Text="How about a snack?" FontSize="Subtitle"
                    FontAttributes="Bold" TextColor="#a90409"/>

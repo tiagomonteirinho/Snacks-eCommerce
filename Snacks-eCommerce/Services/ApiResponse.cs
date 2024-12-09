@@ -1,11 +1,10 @@
-﻿namespace Snacks_eCommerce.Services
+﻿namespace Snacks_eCommerce.Services;
+
+public class ApiResponse<T>
 {
-    public class ApiResponse<T>
-    {
-        public T? Data { get; set; }
+    public T? Data { get; set; }
 
-        public string? ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
-        public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
-    }
+    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
 }
