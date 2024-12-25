@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodStore_MauiApp.Pages.ProductDetailsPage">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+
+        <Image Grid.Row="0" Grid.Column="0" x:Name="image"
+               Aspect="AspectFit" HeightRequest="320"
+               VerticalOptions="Start"/>
+
+        <ImageButton Grid.Row="0" x:Name="favourite_imgBtn" Clicked="favourite_imgBtn_Clicked"
+                     Source="heart" CornerRadius="15"
+                     BackgroundColor="White"
+                     Margin="20" Padding="5"
+                     WidthRequest="40" HeightRequest="40"
+                     HorizontalOptions="End" VerticalOptions="Start"/>
+
+        <HorizontalStackLayout Grid.Row="1" Spacing="20" Margin="20"                         
+                               HorizontalOptions="Center">
+            <Button x:Name="decrement_btn" Text="-" Clicked="decrement_btn_Clicked"
+                    FontSize="30" FontAttributes="Bold"
+                    TextColor="White" CornerRadius="25"
+                    BackgroundColor="#18565f" Padding="0"
+                    WidthRequest="50" HeightRequest="50"
+                    HorizontalOptions="Center" VerticalOptions="Center"/>
+            <Label x:Name="quantity_lbl" Text="1" FontSize="Large"
+                   VerticalTextAlignment="Center"/>
+            <Button x:Name="increment_btn" Text="+" Clicked="increment_btn_Clicked"
+                    FontSize="30" FontAttributes="Bold"
+                    TextColor="White" CornerRadius="25"
+                    BackgroundColor="#18565f" Padding="0"
+                    WidthRequest="50" HeightRequest="50"
+                    HorizontalOptions="Center" VerticalOptions="Center"/>
+        </HorizontalStackLayout>
+
+        <Grid ColumnDefinitions="8*,2*" Grid.Row="2" Margin="20">
+            <Label Grid.Column="0" x:Name="name_lbl" FontSize="20"
+                   FontAttributes="Bold" VerticalOptions="Center"/>
+            <Label Grid.Column="1" FontSize="Medium"
+                   FontAttributes="Bold" VerticalOptions="Center">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <FormattedString.Spans>
+                            <Span x:Name="unitPrice_lbl" FontSize="Medium" FontAttributes="Bold"/>
+                            <Span Text="€" FontSize="Medium" FontAttributes="Bold"/>
+                        </FormattedString.Spans>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+        </Grid>
+
+        <Label Grid.Row="3" x:Name="description_lbl" Margin="15"
+               FontSize="17" FontAttributes="Bold"/>
+
+        <Grid Grid.Row="4" ColumnDefinitions="5*,5*" ColumnSpacing="10">
+            <VerticalStackLayout VerticalOptions="Center">
+                <Label Text="Total" FontSize="Medium" FontAttributes="Bold"
+                       HorizontalOptions="Center" VerticalOptions="Center"/>
+                <Label HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <FormattedString.Spans>
+                                <Span x:Name="total_lbl" FontSize="Medium" FontAttributes="Bold"/>
+                                <Span Text="€" FontSize="Medium" FontAttributes="Bold"/>
+                            </FormattedString.Spans>
+                        </FormattedString>
+                    </Label.FormattedText>
+                </Label>
+            </VerticalStackLayout>
+
+            <Button Grid.Column="1" x:Name="addToCart_btn" Clicked="addToCart_btn_Clicked"
+                    Text="Add to cart" FontSize="15" FontAttributes="Bold"
+                     TextColor="White" CornerRadius="0" BackgroundColor="#18565f" 
+                    Padding="30" Margin="0,0,0,5"/>
+        </Grid>
+        
+    </Grid>
+</ContentPage>

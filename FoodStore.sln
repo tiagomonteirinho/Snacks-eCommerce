@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodStore_MauiApp", "FoodStore_MauiApp\FoodStore_MauiApp.csproj", "{A2DE71AE-7A1F-48EB-8A16-E90040CFA039}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FoodStore_WebApi", "FoodStore_WebApi\FoodStore_WebApi.csproj", "{0722C0AA-5249-4765-9459-204F988FAA72}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2DE71AE-7A1F-48EB-8A16-E90040CFA039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2DE71AE-7A1F-48EB-8A16-E90040CFA039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2DE71AE-7A1F-48EB-8A16-E90040CFA039}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{A2DE71AE-7A1F-48EB-8A16-E90040CFA039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2DE71AE-7A1F-48EB-8A16-E90040CFA039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2DE71AE-7A1F-48EB-8A16-E90040CFA039}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{0722C0AA-5249-4765-9459-204F988FAA72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0722C0AA-5249-4765-9459-204F988FAA72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0722C0AA-5249-4765-9459-204F988FAA72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0722C0AA-5249-4765-9459-204F988FAA72}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FB954E8D-3AD8-4B56-BF0C-1743BC2F71D5}
+	EndGlobalSection
+EndGlobal

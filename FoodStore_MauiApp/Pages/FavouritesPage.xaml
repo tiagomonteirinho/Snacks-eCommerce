@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FoodStore_MauiApp.Pages.FavouritesPage"
+             Title="Favourites">
+
+    <VerticalStackLayout>
+        <Label x:Name="empty_lbl" Text="No products favourited." IsVisible="False"
+               FontSize="15" FontAttributes="Bold" TextColor="Red" 
+               HorizontalOptions="Center" VerticalOptions="Center"/>
+
+        <CollectionView x:Name="favourites_cv" SelectionChanged="favourites_cv_SelectionChanged"
+                        SelectionMode="Single" Margin="5">
+
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Span="2" Orientation="Vertical"
+                             HorizontalItemSpacing="10" VerticalItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="10" StrokeShape="RoundRectangle 10,10,10,10"
+                            VerticalOptions="Start" >
+                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="5">
+                            <Image Source="{Binding ImageUrl}" Aspect="AspectFill"
+                                   HeightRequest="130"/>
+                            <Label Grid.Row="1" Text="{Binding Name}" FontSize="12"
+                                   FontAttributes="Bold" MaxLines="2" LineBreakMode="WordWrap"/>
+                            <Label Grid.Row="2" Text="{Binding Price, StringFormat='{0:F2}€'}" 
+                                   FontAttributes="Bold"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
+    
